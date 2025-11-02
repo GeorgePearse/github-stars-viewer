@@ -1,0 +1,327 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.search-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.username-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#username {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+#username:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding-top: 20px;
+    border-top: 1px solid #e1e4e8;
+}
+
+.stats span {
+    padding: 8px 16px;
+    background: #f6f8fa;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #586069;
+}
+
+.controls {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    margin-bottom: 15px;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+select {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.clusters {
+    margin-bottom: 20px;
+}
+
+.cluster-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.cluster-tab {
+    padding: 8px 16px;
+    background: #f6f8fa;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.cluster-tab:hover {
+    background: #e1e4e8;
+}
+
+.cluster-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.loading {
+    text-align: center;
+    padding: 60px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    color: #856404;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.repositories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.repo-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.repo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.repo-header {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.repo-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0366d6;
+    flex: 1;
+    word-break: break-word;
+}
+
+.repo-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #586069;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.repo-description {
+    color: #586069;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.repo-footer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.repo-language {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #586069;
+}
+
+.language-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.repo-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.topic-tag {
+    background: #f1f8ff;
+    color: #0366d6;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    .repositories {
+        grid-template-columns: 1fr;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    select {
+        width: 100%;
+    }
+}

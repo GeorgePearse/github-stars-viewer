@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Stars Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⭐ GitHub Stars Viewer</h1>
+            <p class="subtitle">View and explore anyone's starred repositories</p>
+        </header>
+
+        <div class="search-section">
+            <div class="username-input">
+                <input type="text" id="username" placeholder="Enter GitHub username..." />
+                <button id="loadStars">Load Stars</button>
+            </div>
+
+            <div id="stats" class="stats hidden">
+                <span id="totalStars">0 stars</span>
+                <span id="languageCount">0 languages</span>
+            </div>
+        </div>
+
+        <div id="controls" class="controls hidden">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search repositories..." />
+            </div>
+
+            <div class="filters">
+                <select id="languageFilter">
+                    <option value="">All Languages</option>
+                </select>
+
+                <select id="sortBy">
+                    <option value="recent">Recently Starred</option>
+                    <option value="stars">Most Stars</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="updated">Recently Updated</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Loading starred repositories...</p>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+        <div id="clusters" class="clusters hidden">
+            <div class="cluster-tabs" id="clusterTabs"></div>
+        </div>
+
+        <div id="repositories" class="repositories"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
