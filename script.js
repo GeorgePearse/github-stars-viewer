@@ -26,42 +26,121 @@ class GitHubStarsViewer {
         this.filteredRepos = [];
         this.currentUsername = '';
         this.currentCluster = 'all';
+        this.recentSearches = this.loadRecentSearches();
 
         this.initEventListeners();
+        this.displayRecentSearches();
     }
 
     initEventListeners() {
-        document.getElementById('loadStars').addEventListener('click', () => this.loadStars());
-        document.getElementById('username').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.loadStars();
+        // Initial view search
+        document.getElementById('searchButton').addEventListener('click', () => this.loadStarsFromMain());
+        document.getElementById('usernameMain').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.loadStarsFromMain();
         });
+
+        // Results view
+        document.getElementById('backButton').addEventListener('click', () => this.showInitialView());
         document.getElementById('searchInput').addEventListener('input', (e) => this.handleSearch(e.target.value));
         document.getElementById('languageFilter').addEventListener('change', (e) => this.handleLanguageFilter(e.target.value));
         document.getElementById('sortBy').addEventListener('change', (e) => this.handleSort(e.target.value));
     }
 
-    async loadStars() {
-        const username = document.getElementById('username').value.trim();
+    loadRecentSearches() {
+        try {
+            const searches = localStorage.getItem('recentSearches');
+            return searches ? JSON.parse(searches) : [];
+        } catch {
+            return [];
+        }
+    }
+
+    saveRecentSearch(username, totalStars, languageCount) {
+        // Remove if already exists
+        this.recentSearches = this.recentSearches.filter(s => s.username !== username);
+
+        // Add to beginning
+        this.recentSearches.unshift({
+            username,
+            totalStars,
+            languageCount,
+            timestamp: Date.now()
+        });
+
+        // Keep only last 6
+        this.recentSearches = this.recentSearches.slice(0, 6);
+
+        // Save to localStorage
+        localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
+        this.displayRecentSearches();
+    }
+
+    displayRecentSearches() {
+        if (this.recentSearches.length === 0) {
+            document.getElementById('recentSearches').classList.add('hidden');
+            return;
+        }
+
+        const grid = document.getElementById('recentGrid');
+        grid.innerHTML = '';
+
+        this.recentSearches.forEach(search => {
+            const card = document.createElement('div');
+            card.className = 'recent-card';
+            card.innerHTML = `
+                <div class="recent-card-username">@${search.username}</div>
+                <div class="recent-card-stats">${search.totalStars} stars • ${search.languageCount} languages</div>
+            `;
+            card.addEventListener('click', () => this.loadStars(search.username));
+            grid.appendChild(card);
+        });
+
+        document.getElementById('recentSearches').classList.remove('hidden');
+    }
+
+    showInitialView() {
+        document.getElementById('initialView').classList.remove('hidden');
+        document.getElementById('resultsView').classList.add('hidden');
+        document.getElementById('usernameMain').value = '';
+    }
+
+    showResultsView() {
+        document.getElementById('initialView').classList.add('hidden');
+        document.getElementById('resultsView').classList.remove('hidden');
+    }
+
+    loadStarsFromMain() {
+        const username = document.getElementById('usernameMain').value.trim();
         if (!username) {
             this.showError('Please enter a GitHub username');
             return;
         }
+        this.loadStars(username);
+    }
 
+    async loadStars(username) {
         this.currentUsername = username;
         this.showLoading(true);
         this.hideError();
-        this.hideControls();
 
         try {
             const repos = await this.fetchAllStarredRepos(username);
             this.allRepos = repos;
             this.filteredRepos = repos;
 
+            const languageCount = new Set(repos.map(r => r.language).filter(Boolean)).size;
+
             this.updateStats();
             this.populateLanguageFilter();
             this.createClusters();
             this.displayRepos();
-            this.showControls();
+            this.showResultsView();
+
+            // Update current username display
+            document.getElementById('currentUsername').textContent = `@${username}`;
+
+            // Save to recent searches
+            this.saveRecentSearch(username, repos.length, languageCount);
 
             // Fetch and display recommendations
             this.fetchRecommendations();
@@ -96,7 +175,7 @@ class GitHubStarsViewer {
             page++;
 
             // Update loading message
-            document.querySelector('.loading p').textContent =
+            document.getElementById('loadingMessage').textContent =
                 `Loading starred repositories... (${allRepos.length} loaded)`;
 
             // GitHub API rate limit: be nice
@@ -157,6 +236,8 @@ class GitHubStarsViewer {
                     const newRepos = data.items.filter(repo => !starredRepoIds.has(repo.id));
                     recommendations.push(...newRepos);
                 }
+                // Small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
             } catch (e) {
                 console.error(`Error searching topic ${topic}:`, e);
             }
@@ -176,9 +257,13 @@ class GitHubStarsViewer {
         // Add a recommendations section
         const repoContainer = document.getElementById('repositories');
 
+        // Remove existing recommendations section if any
+        const existingRec = repoContainer.parentNode.querySelector('.recommendations-section');
+        if (existingRec) existingRec.remove();
+
         const recSection = document.createElement('div');
         recSection.className = 'recommendations-section';
-        recSection.innerHTML = '<h2 style="color: white; margin-bottom: 20px;">💡 Recommended for You</h2>';
+        recSection.innerHTML = '<h2>💡 Recommended for You</h2>';
 
         const recGrid = document.createElement('div');
         recGrid.className = 'repositories';
@@ -233,8 +318,6 @@ class GitHubStarsViewer {
             const tab = this.createClusterTab(`#${topic}`, count, `topic:${topic}`);
             clusterTabs.appendChild(tab);
         });
-
-        document.getElementById('clusters').classList.remove('hidden');
     }
 
     createClusterTab(label, count, clusterId) {
@@ -326,7 +409,6 @@ class GitHubStarsViewer {
             `${this.allRepos.length} stars`;
         document.getElementById('languageCount').textContent =
             `${languages.size} languages`;
-        document.getElementById('stats').classList.remove('hidden');
     }
 
     populateLanguageFilter() {
@@ -349,7 +431,7 @@ class GitHubStarsViewer {
         container.innerHTML = '';
 
         if (this.filteredRepos.length === 0) {
-            container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: white; padding: 40px;">No repositories found</div>';
+            container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">No repositories found</div>';
             return;
         }
 
@@ -394,7 +476,7 @@ class GitHubStarsViewer {
                 ` : ''}
             </div>
             ${topicsHTML}
-            ${isRecommendation ? '<div style="margin-top: 10px; font-size: 12px; color: #667eea; font-weight: 600;">💡 Recommended</div>' : ''}
+            ${isRecommendation ? '<div style="margin-top: 10px; font-size: 12px; color: var(--primary-color); font-weight: 600;">💡 Recommended</div>' : ''}
         `;
 
         return card;
@@ -409,24 +491,24 @@ class GitHubStarsViewer {
 
     showLoading(show) {
         document.getElementById('loading').classList.toggle('hidden', !show);
+        if (!show) {
+            document.getElementById('loadingMessage').textContent = 'Loading starred repositories...';
+        }
     }
 
     showError(message) {
         const errorDiv = document.getElementById('error');
         errorDiv.textContent = message;
         errorDiv.classList.remove('hidden');
+
+        // Auto-hide after 4 seconds
+        setTimeout(() => {
+            this.hideError();
+        }, 4000);
     }
 
     hideError() {
         document.getElementById('error').classList.add('hidden');
-    }
-
-    showControls() {
-        document.getElementById('controls').classList.remove('hidden');
-    }
-
-    hideControls() {
-        document.getElementById('controls').classList.add('hidden');
     }
 }
 

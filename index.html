@@ -7,56 +7,82 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>⭐ GitHub Stars Viewer</h1>
-            <p class="subtitle">View and explore anyone's starred repositories</p>
-        </header>
+    <!-- Initial Search View -->
+    <div id="initialView" class="initial-view">
+        <div class="centered-content">
+            <h1 class="main-heading">Whose GitHub stars would you like to explore?</h1>
 
-        <div class="search-section">
-            <div class="username-input">
-                <input type="text" id="username" placeholder="Enter GitHub username..." />
-                <button id="loadStars">Load Stars</button>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="usernameMain" placeholder="Enter GitHub username..." />
+                    <button id="searchButton" class="search-btn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Search
+                    </button>
+                </div>
             </div>
 
-            <div id="stats" class="stats hidden">
+            <div id="recentSearches" class="recent-searches hidden">
+                <h3>Recent Searches</h3>
+                <div id="recentGrid" class="recent-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results View -->
+    <div id="resultsView" class="results-view hidden">
+        <nav class="top-nav">
+            <button id="backButton" class="back-btn">← Back to Search</button>
+            <div class="current-user">
+                <span id="currentUsername"></span>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div id="stats" class="stats">
                 <span id="totalStars">0 stars</span>
                 <span id="languageCount">0 languages</span>
             </div>
-        </div>
 
-        <div id="controls" class="controls hidden">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search repositories..." />
+            <div id="controls" class="controls">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search repositories..." />
+                </div>
+
+                <div class="filters">
+                    <select id="languageFilter">
+                        <option value="">All Languages</option>
+                    </select>
+
+                    <select id="sortBy">
+                        <option value="recent">Recently Starred</option>
+                        <option value="stars">Most Stars</option>
+                        <option value="name">Name A-Z</option>
+                        <option value="updated">Recently Updated</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="filters">
-                <select id="languageFilter">
-                    <option value="">All Languages</option>
-                </select>
-
-                <select id="sortBy">
-                    <option value="recent">Recently Starred</option>
-                    <option value="stars">Most Stars</option>
-                    <option value="name">Name A-Z</option>
-                    <option value="updated">Recently Updated</option>
-                </select>
+            <div id="clusters" class="clusters">
+                <div class="cluster-tabs" id="clusterTabs"></div>
             </div>
+
+            <div id="repositories" class="repositories"></div>
         </div>
-
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Loading starred repositories...</p>
-        </div>
-
-        <div id="error" class="error hidden"></div>
-
-        <div id="clusters" class="clusters hidden">
-            <div class="cluster-tabs" id="clusterTabs"></div>
-        </div>
-
-        <div id="repositories" class="repositories"></div>
     </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingMessage">Loading starred repositories...</p>
+        </div>
+    </div>
+
+    <!-- Error Toast -->
+    <div id="error" class="error-toast hidden"></div>
 
     <script src="script.js"></script>
 </body>

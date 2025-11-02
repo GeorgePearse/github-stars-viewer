@@ -20,10 +20,12 @@ A simple, beautiful web application to view and explore anyone's GitHub starred 
 - **No login required** - works with public GitHub data
 
 ### 🎨 Beautiful UI
-- Clean, modern design inspired by Astral
+- Clean, modern design inspired by DeepWiki and Astral
+- Centered search interface with recent searches
 - Responsive layout for all devices
 - Smooth animations and transitions
 - Repository cards with languages, topics, and star counts
+- localStorage integration to remember your recent searches
 
 ## 🚀 Getting Started
 
@@ -77,6 +79,7 @@ Contributions are welcome! Feel free to:
 
 MIT License - feel free to use this project however you'd like!
 
-## 🙏 Credits
+## 🙏 Credits & References
 
-Inspired by [Astral](https://astralapp.com) - A great tool for organizing your own GitHub stars
+- UI Design inspired by [DeepWiki](https://deepwiki.com) - Clean, centered search interface
+- Feature inspiration from [Astral](https://astralapp.com) - A great tool for organizing your own GitHub stars
