@@ -1,6 +1,6 @@
 # ⭐ GitHub Stars Viewer
 
-A simple, beautiful web application to view and explore anyone's GitHub starred repositories - no login required!
+A simple, beautiful web application to view and explore anyone's GitHub starred repositories - no login required! (e.g. request to create one, and then go to xyz.com/GeorgePearse
 
 ## ✨ Features
 
